@@ -1,0 +1,2 @@
+# mercurius-nestjs
+Mercurius NestJS
