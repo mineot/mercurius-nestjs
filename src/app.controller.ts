@@ -11,9 +11,6 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    this.prisma.user.findFirst().then((user: any) => {
-      console.log(user);
-    });
     return this.appService.getHello();
   }
 }
