@@ -11,5 +11,27 @@ model User {
   id        String  @id @default(uuid())
   name      String
   email     String  @unique
-  password  String 
+  password  String
+  
+  @@map("users")
+}
+
+model Language {
+  id      String  @id @default(uuid())
+  name    String  @unique
+  lang    String
+  country String
+  terms   Term[]
+
+  @@map("languages")
+}
+
+model Term {
+  id      String    @id @default(uuid())
+  code    String
+  value   String
+  lang    Language  @relation(fields:[langId], references: [id])
+  langId  String
+
+  @@map("terms")
 }
