@@ -1,38 +1,55 @@
 import { PrismaClient, User } from '@prisma/client';
-import { error, finish, info, start, success, warn } from '../helper/logger';
+import { Seeder } from '../helper/seeder';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
-export async function SeedUsers() {
-  try {
-    start('Seeding Users');
+class UserSeeder extends Seeder {
+  startMessage(): string {
+    return 'Seeding Users';
+  }
 
-    const user: User = {
+  finishMessage(): string {
+    return 'Seeding Users';
+  }
+
+  errorMessage(): string {
+    return 'Seeding Users Failed';
+  }
+  async finish(): Promise<void> {
+    return await prisma.$disconnect();
+  }
+
+  async process(): Promise<void> {
+    const user: User = await this.userData();
+    const exists: boolean = await this.exists(user.email);
+
+    this.infoMesage('User:', user.name);
+
+    if (exists) {
+      this.warnMessage('User Already Seeded');
+    } else {
+      await prisma.user.create({ data: user });
+      this.successMessage('Success Seeded');
+    }
+  }
+
+  private async userData(): Promise<User> {
+    return {
       id: undefined,
       name: 'Administrator',
       email: 'admin@admin.com',
       password: await bcrypt.hash('admin!123987', 10),
     };
+  }
 
-    info('User:', user.name);
-
+  private async exists(email: string): Promise<boolean> {
     const counter = await prisma.user.count({
-      where: {
-        email: user.email,
-      },
+      where: { email },
     });
 
-    if (counter === 0) {
-      await prisma.user.create({ data: user });
-      success('Success Seeded');
-    } else {
-      warn('User Already Seeded');
-    }
-  } catch (e) {
-    error('Seeding User Failed', e);
-  } finally {
-    await prisma.$disconnect();
-    finish('Seeding Users');
+    return counter > 0;
   }
 }
+
+export const userSeeder: UserSeeder = new UserSeeder();
