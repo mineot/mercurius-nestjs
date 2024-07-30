@@ -4,6 +4,6 @@ import { CryptoService } from './crypto.service';
 
 @Module({
   providers: [PrismaService, CryptoService],
-  exports: [PrismaService],
+  exports: [PrismaService, CryptoService],
 })
 export class SharedModule {}
