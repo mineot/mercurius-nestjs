@@ -12,7 +12,7 @@ model User {
   name      String
   email     String  @unique
   password  String
-  
+
   @@map("users")
 }
 
@@ -28,10 +28,11 @@ model Language {
 
 model Term {
   id      String    @id @default(uuid())
+  langId  String
   code    String
   value   String
+
   lang    Language  @relation(fields:[langId], references: [id])
-  langId  String
 
   @@map("terms")
 }

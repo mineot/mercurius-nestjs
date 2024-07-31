@@ -17,9 +17,9 @@ CREATE TABLE "languages" (
 -- CreateTable
 CREATE TABLE "terms" (
     "id" TEXT NOT NULL PRIMARY KEY,
+    "langId" TEXT NOT NULL,
     "code" TEXT NOT NULL,
     "value" TEXT NOT NULL,
-    "langId" TEXT NOT NULL,
     CONSTRAINT "terms_langId_fkey" FOREIGN KEY ("langId") REFERENCES "languages" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
