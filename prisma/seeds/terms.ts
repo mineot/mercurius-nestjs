@@ -13,12 +13,13 @@ async function findLanguage(lang: string, country: string): Promise<Language> {
   });
 }
 
-async function createTerm(
-  code: string,
-  value: string,
-  langId: string,
-): Promise<Term> {
-  return { id: undefined, code, value, langId };
+async function term(item: any, language: Language): Promise<Term> {
+  return {
+    id: undefined,
+    code: item.code,
+    value: item[language.country.toLowerCase()],
+    langId: language.id,
+  };
 }
 
 async function count(code: string, langId: string): Promise<number> {
@@ -27,33 +28,24 @@ async function count(code: string, langId: string): Promise<number> {
   });
 }
 
-async function process(exists: boolean, data: Term, desc: string) {
-  if (!exists) {
-    await prisma.term.create({ data });
-    success('Term created:', desc);
+async function process(exists: boolean, data: Term) {
+  if (exists) {
+    warn('Term Already exists');
   } else {
-    warn('Term Already exists:', desc);
+    await prisma.term.create({ data });
+    success('Term created');
   }
 }
 
 async function loop(language: Language) {
   const promises = [];
 
-  terms.forEach(async (term: any) => {
+  terms.forEach(async (item: any) => {
     promises.push(
       new Promise(async (resolve) => {
-        const tt: Term = await createTerm(
-          term.code,
-          term[language.country.toLowerCase()],
-          language.id,
-        );
-
-        const desc: string = `${language.name}: ${tt.code}`;
-
-        info('Terms:', desc);
-
-        await process((await count(tt.code, language.id)) === 0, tt, desc);
-
+        const tt: Term = await term(item, language);
+        info('Term:', `${language.name}: ${tt.code}`);
+        await process((await count(tt.code, language.id)) > 0, tt);
         resolve(1);
       }),
     );
