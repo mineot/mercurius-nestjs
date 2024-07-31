@@ -17,11 +17,12 @@ model User {
 }
 
 model Language {
-  id      String  @id @default(uuid())
-  name    String  @unique
-  lang    String
-  country String
-  terms   Term[]
+  id        String  @id @default(uuid())
+  name      String  @unique
+  lang      String
+  country   String
+  terms     Term[]
+  profiles  Profile[]
 
   @@map("languages")
 }
@@ -31,8 +32,22 @@ model Term {
   langId  String
   code    String
   value   String
-
   lang    Language  @relation(fields:[langId], references: [id])
 
   @@map("terms")
+}
+
+model Profile {
+  id        String    @id @default(uuid())
+  langId    String
+  name      String
+  job_title String
+  summary   String
+  biography String
+  photo_sm  String
+  photo_lg  String
+  activity  String
+  lang      Language  @relation(fields:[langId], references: [id])
+
+  @@map("profiles")
 }
