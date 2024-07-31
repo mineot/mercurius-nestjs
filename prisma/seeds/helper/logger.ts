@@ -29,4 +29,5 @@ export function warn(message: string, data?: any) {
 
 export function error(message: string, data?: any) {
   log(console.error, `\x1b[31m${message}\x1b[0m`, data);
+  process.exit(1);
 }

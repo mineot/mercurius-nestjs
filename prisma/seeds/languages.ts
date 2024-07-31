@@ -1,55 +1,56 @@
 import { Language, PrismaClient } from '@prisma/client';
-import { error, finish, info, start, success, warn } from '../helper/logger';
+import { error, finish, info, start, success, warn } from './helper/logger';
 
 const prisma = new PrismaClient();
 
-export async function SeedLanguages() {
+async function englishData(): Promise<Language> {
+  return {
+    id: undefined,
+    name: 'English USA',
+    lang: 'en',
+    country: 'US',
+  };
+}
+
+async function portugueseData(): Promise<Language> {
+  return {
+    id: undefined,
+    name: 'Português Brasil',
+    lang: 'pt',
+    country: 'BR',
+  };
+}
+
+async function exists(language: Language): Promise<number> {
+  return await prisma.language.count({
+    where: {
+      lang: language.lang,
+      country: language.country,
+    },
+  });
+}
+
+export async function languagesSeeder() {
   try {
     start('Seeding Languages');
 
-    const us: Language = {
-      id: undefined,
-      name: 'English USA',
-      lang: 'en',
-      country: 'US',
-    };
+    const english: Language = await englishData();
+    const portuguese: Language = await portugueseData();
 
-    const br: Language = {
-      id: undefined,
-      name: 'Português Brasil',
-      lang: 'pt',
-      country: 'BR',
-    };
+    info('Languages:', [english.name, portuguese.name]);
 
-    info('Seeding Languages:', [us.name, br.name]);
-
-    const counter = {
-      us: await prisma.language.count({
-        where: {
-          lang: us.lang,
-          country: us.country,
-        },
-      }),
-      br: await prisma.language.count({
-        where: {
-          lang: br.lang,
-          country: br.country,
-        },
-      }),
-    };
-
-    if (counter.us === 0) {
-      await prisma.language.create({ data: us });
-      success('Seeded Language Successfully', us.name);
+    if ((await exists(english)) === 0) {
+      await prisma.language.create({ data: english });
+      success('Language created:', english.name);
     } else {
-      warn('Language Already Seeded', us.name);
+      warn('Language already exists:', english.name);
     }
 
-    if (counter.br === 0) {
-      await prisma.language.create({ data: br });
-      success('Seeded Language Successfully', br.name);
+    if ((await exists(portuguese)) === 0) {
+      await prisma.language.create({ data: portuguese });
+      success('Language created:', portuguese.name);
     } else {
-      warn('Language Already Seeded', br.name);
+      warn('Language already exists:', portuguese.name);
     }
   } catch (e) {
     error('Seeding Languages Failed', e);

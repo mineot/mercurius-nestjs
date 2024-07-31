@@ -1,95 +1,74 @@
-import { PrismaClient, Term } from '@prisma/client';
-import { error, finish, info, start, success, warn } from '../helper/logger';
+import { Language, PrismaClient, Term } from '@prisma/client';
+import { error, finish, info, start, success, warn } from './helper/logger';
 
 const prisma = new PrismaClient();
 
-export async function SeedTerms() {
+const terms = [{ code: 'app.name', us: 'Mercurius', br: 'Mercurius' }];
+
+async function findLanguage(lang: string, country: string): Promise<Language> {
+  return await prisma.language.findFirst({
+    where: {
+      AND: [{ lang }, { country }],
+    },
+  });
+}
+
+async function createTerm(
+  code: string,
+  value: string,
+  langId: string,
+): Promise<Term> {
+  return { id: undefined, code, value, langId };
+}
+
+async function count(code: string, langId: string): Promise<number> {
+  return await prisma.term.count({
+    where: { AND: [{ code }, { langId }] },
+  });
+}
+
+async function process(exists: boolean, data: Term, desc: string) {
+  if (!exists) {
+    await prisma.term.create({ data });
+    success('Term created:', desc);
+  } else {
+    warn('Term Already exists:', desc);
+  }
+}
+
+async function loop(language: Language) {
+  const promises = [];
+
+  terms.forEach(async (term: any) => {
+    promises.push(
+      new Promise(async (resolve) => {
+        const tt: Term = await createTerm(
+          term.code,
+          term[language.country.toLowerCase()],
+          language.id,
+        );
+
+        const desc: string = `${language.name}: ${tt.code}`;
+
+        info('Terms:', desc);
+
+        await process((await count(tt.code, language.id)) === 0, tt, desc);
+
+        resolve(1);
+      }),
+    );
+  });
+
+  return Promise.all(promises);
+}
+
+export async function termsSeeder() {
   try {
     start('Seeding Terms');
-
-    const languages = {
-      us: await prisma.language.findFirst({
-        where: {
-          AND: [{ lang: 'en' }, { country: 'US' }],
-        },
-      }),
-      br: await prisma.language.findFirst({
-        where: { lang: 'pt', country: 'BR' },
-      }),
-    };
-
-    terms.forEach(async (term: any) => {
-      const enTerm: Term = {
-        id: undefined,
-        code: term.code,
-        value: term[languages.us.country.toLowerCase()],
-        langId: languages.us.id,
-      };
-
-      info('Seeding Terms:', [
-        languages.us.lang,
-        languages.us.country,
-        enTerm.code,
-        enTerm.value,
-      ]);
-
-      const ptTerm: Term = {
-        id: undefined,
-        code: term.code,
-        value: term[languages.br.country.toLowerCase()],
-        langId: languages.br.id,
-      };
-
-      info('Seeding Terms:', [
-        languages.br.lang,
-        languages.br.country,
-        ptTerm.code,
-        ptTerm.value,
-      ]);
-
-      const counter = {
-        us: await prisma.term.count({
-          where: { code: enTerm.code },
-        }),
-        br: await prisma.term.count({
-          where: { code: ptTerm.code },
-        }),
-      };
-
-      if (counter.us === 0) {
-        await prisma.term.create({ data: enTerm });
-        success('Seeded Term Successfully', [
-          languages.us.lang,
-          languages.us.country,
-          enTerm.code,
-          enTerm.value,
-        ]);
-      } else {
-        warn('Term Already Seeded', [
-          languages.us.lang,
-          languages.us.country,
-          enTerm.code,
-          enTerm.value,
-        ]);
-      }
-
-      if (counter.br === 0) {
-        await prisma.term.create({ data: ptTerm });
-        success('Seeded Term Successfully', [
-          languages.br.lang,
-          languages.br.country,
-          ptTerm.code,
-          ptTerm.value,
-        ]);
-      } else {
-        warn('Term Already Seeded', [
-          languages.br.lang,
-          languages.br.country,
-          ptTerm.code,
-          ptTerm.value,
-        ]);
-      }
-    });
+    const englishLanguage: Language = await findLanguage('en', 'US');
+    const portugueseLanguage: Language = await findLanguage('pt', 'BR');
+    await loop(englishLanguage);
+    await loop(portugueseLanguage);
   } catch (e) {
     error('Seeding Terms Failed', e);
   } finally {
@@ -97,5 +76,3 @@ export async function SeedTerms() {
     finish('Seeding Terms');
   }
 }
-
-const terms = [{ code: 'app.name', us: 'Mercurius', br: 'Mercurius' }];

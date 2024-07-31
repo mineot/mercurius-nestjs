@@ -1,11 +1,11 @@
 import { userSeeder } from './seeds/users';
-// import { SeedLanguages } from './seeds/languages';
-// import { SeedTerms } from './seeds/terms';
+import { languagesSeeder } from './seeds/languages';
+import { termsSeeder } from './seeds/terms';
 
-async function Seeder() {
-  await userSeeder.seed();
-  // await SeedLanguages();
-  // await SeedTerms();
+async function seeders(): Promise<void> {
+  await userSeeder();
+  await languagesSeeder();
+  await termsSeeder();
 }
 
-Seeder();
+seeders();
