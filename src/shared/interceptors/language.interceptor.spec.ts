@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LanguageInterceptor } from '@shared/interceptors/language.interceptor';
 import { PrismaService } from '@shared/prisma.service';
-import { of } from 'rxjs';
 
 describe('LanguageInterceptor', () => {
   let interceptor: LanguageInterceptor;
@@ -38,23 +37,21 @@ describe('LanguageInterceptor', () => {
     } as any;
 
     const next = {
-      handle: jest.fn().mockReturnValue(of(null)),
+      handle: jest.fn().mockReturnValue(Promise.resolve(null)),
     } as any;
 
-    const findManyMock = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve([]))
-      .mockResolvedValueOnce([
-        { lang: 'en', country: 'US', name: 'English' },
-        { lang: 'en', country: 'GB', name: 'English (UK)' },
-        { lang: 'es', country: 'ES', name: 'Español' },
-      ]);
+    const findManyMock = jest.fn().mockResolvedValueOnce([
+      { lang: 'en', country: 'US', name: 'English' },
+      { lang: 'en', country: 'GB', name: 'English (UK)' },
+      { lang: 'es', country: 'ES', name: 'Español' },
+    ]);
 
     prismaService.language.findMany = findManyMock;
 
     await interceptor.intercept(context, next);
 
-    expect(prismaService.language.findMany).toHaveBeenCalledWith({});
+    expect(prismaService.language.findMany).toHaveBeenCalledWith();
+
     expect(context.switchToHttp().getRequest().language).toEqual({
       lang: 'en',
       country: 'US',
@@ -74,7 +71,7 @@ describe('LanguageInterceptor', () => {
     } as any;
 
     const next = {
-      handle: jest.fn().mockReturnValue(of(null)),
+      handle: jest.fn().mockReturnValue(Promise.resolve(null)),
     } as any;
 
     (prismaService.language.findMany as jest.Mock).mockResolvedValue([
@@ -84,7 +81,8 @@ describe('LanguageInterceptor', () => {
 
     await interceptor.intercept(context, next);
 
-    expect(prismaService.language.findMany).toHaveBeenCalledWith({});
+    expect(prismaService.language.findMany).toHaveBeenCalledWith();
+
     expect(context.switchToHttp().getRequest().language).toEqual({
       lang: 'en',
       country: 'US',
