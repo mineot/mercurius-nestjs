@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Language } from '@prisma/client';
+import { PrismaService } from '@shared/prisma.service';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -10,7 +11,18 @@ describe('AppController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [
+        AppService,
+        PrismaService,
+        {
+          provide: PrismaService,
+          useValue: {
+            language: {
+              findMany: jest.fn().mockResolvedValue([]),
+            },
+          },
+        },
+      ],
     }).compile();
 
     appController = module.get<AppController>(AppController);
@@ -40,9 +52,15 @@ describe('AppController', () => {
     const result = await appController.index(mockLanguage);
 
     expect(result).toEqual({
-      id: 1,
+      id: 'DEF123',
+      langId: 'ABC123',
       name: 'John Doe',
-      bio: 'Software engineer',
+      job_title: 'Software Engineer',
+      summary: 'Lorem ipsum...',
+      biography: 'Software engineer',
+      photo_sm: 'https://example.com/photo_sm.jpg',
+      photo_lg: 'https://example.com/photo_lg.jpg',
+      activity: 'Your activity goes here',
     });
     expect(appService.index).toHaveBeenCalledWith(mockLanguage);
   });

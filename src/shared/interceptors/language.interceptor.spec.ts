@@ -10,6 +10,7 @@ describe('LanguageInterceptor', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LanguageInterceptor,
+        PrismaService,
         {
           provide: PrismaService,
           useValue: {
