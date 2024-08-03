@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
-import { CryptoService } from './crypto.service';
+import { PrismaService } from '@shared/services/prisma.service';
+import { CryptoService } from '@shared/services/crypto.service';
 
 @Module({
   providers: [PrismaService, CryptoService],

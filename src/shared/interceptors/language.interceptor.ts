@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { PrismaService } from '@shared/prisma.service';
+import { PrismaService } from '@shared/services/prisma.service';
 import { Language } from '@prisma/client';
 
 import {

@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Language } from '@prisma/client';
-import { PrismaService } from '@shared/prisma.service';
+import { PrismaService } from '@src/shared/services/prisma.service';
 
 describe('AppController', () => {
   let appController: AppController;
