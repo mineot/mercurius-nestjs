@@ -62,7 +62,7 @@ describe('AppController', () => {
       photo_lg: 'https://example.com/photo_lg.jpg',
       activity: 'Your activity goes here',
     });
-    expect(appService.index).toHaveBeenCalledWith(mockLanguage);
+    expect(appService.getProfile).toHaveBeenCalledWith(mockLanguage);
   });
 
   it('should throw an error when language is not provided', async () => {
@@ -74,6 +74,6 @@ describe('AppController', () => {
     await expect(appController.index(mockLanguage)).rejects.toThrow(
       'Language is required',
     );
-    expect(appService.index).toHaveBeenCalledWith(mockLanguage);
+    expect(appService.getProfile).toHaveBeenCalledWith(mockLanguage);
   });
 });

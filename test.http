@@ -1,3 +1,23 @@
-### 
-http://localhost:3000 HTTP/1.1
+### TOKEN GENERATE SECRET KEY TO JWT 
+POST http://localhost:3000/token HTTP/1.1
+accept-language: pt-BR,pt
+content-type: application/json
+
+{
+    "target": "random_secret",
+    "message": "Hello! Just a random message to random secret"
+}
+
+### TOKEN GENERATE PUBLIC ACCESS 
+POST http://localhost:3000/token HTTP/1.1
+accept-language: pt-BR,pt
+content-type: application/json
+
+{
+    "target": "public_access",
+    "issuer": "mercurius.com"
+}
+
+### INDEX
+GET http://localhost:3000 HTTP/1.1
 accept-language: pt-BR,pt

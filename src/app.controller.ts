@@ -1,7 +1,7 @@
-import { Controller, Get, HttpCode } from '@nestjs/common';
-import { AppService } from '@src/app.service';
-import { GetLanguage } from '@shared/decorators/language.decorator';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { Language, Profile } from '@prisma/client';
+import { AppService } from './app.service';
+import { GetLanguage } from '@shared/decorators/language.decorator';
 
 @Controller()
 export class AppController {
@@ -10,6 +10,11 @@ export class AppController {
   @Get()
   @HttpCode(200)
   async index(@GetLanguage() language: Language): Promise<Profile> {
-    return this.appService.index(language);
+    return this.appService.getProfile(language);
+  }
+
+  @Post('token')
+  async token(@Body() body: any): Promise<any> {
+    return this.appService.getToken(body);
   }
 }
