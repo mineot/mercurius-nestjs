@@ -11,9 +11,9 @@ CREATE TABLE "tokens" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "issuer" TEXT NOT NULL,
     "value" TEXT NOT NULL,
-    "revoked" BOOLEAN,
-    "revoke_date" DATETIME,
-    "revoke_delay" INTEGER
+    "revoked" BOOLEAN NOT NULL DEFAULT false,
+    "revoke_at" DATETIME,
+    "revoke_days" INTEGER
 );
 
 -- CreateIndex
