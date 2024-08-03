@@ -16,6 +16,17 @@ model User {
   @@map("users")
 }
 
+model Token {
+  id            String      @id @default(uuid())
+  issuer        String      @unique 
+  value         String
+  revoked       Boolean?
+  revoke_date   DateTime?
+  revoke_delay  Int?
+
+  @@map("tokens")
+}
+
 model Language {
   id        String  @id @default(uuid())
   name      String  @unique
