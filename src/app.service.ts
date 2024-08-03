@@ -11,8 +11,8 @@ export class AppService {
     private readonly token: TokenService,
   ) {}
 
-  async getToken(params: AppTokenBody): Promise<string> {
-    const { target, message, issuer } = params;
+  async getToken(params: AppTokenBody): Promise<any> {
+    const { target, message, issuer, days } = params;
 
     switch (target) {
       case 'random_secret':
@@ -21,6 +21,12 @@ export class AppService {
       case 'public_access':
         this.badRequest(issuer, 'The attribute "issuer" is required');
         return this.token.generatePublicAccess(issuer);
+      case 'revoke_public_access':
+        this.badRequest(issuer, 'The attribute "issuer" is required');
+        this.badRequest(days, 'The attribute "days" is required');
+        return this.token.revokePublicAccess(issuer, days);
+      case 'revokes_shrink':
+        break;
       default:
         this.badRequest(undefined, 'Invalid target');
         break;
