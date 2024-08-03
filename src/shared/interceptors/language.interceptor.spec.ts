@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { LanguageInterceptor } from '@shared/interceptors/language.interceptor';
-import { PrismaService } from '@src/shared/services/prisma.service';
+import { PrismaService } from '@shared/services/prisma.service';
 
 describe('LanguageInterceptor', () => {
   let interceptor: LanguageInterceptor;
