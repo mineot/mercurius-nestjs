@@ -1,5 +1,5 @@
-### TOKEN GENERATE SECRET KEY TO JWT 
-POST http://localhost:3000/token HTTP/1.1
+### TOKENATOR: GENERATE SECRET KEY 
+POST http://localhost:3000/tokenator HTTP/1.1
 accept-language: pt-BR,pt
 content-type: application/json
 
@@ -8,14 +8,44 @@ content-type: application/json
     "message": "Hello! Just a random message to random secret"
 }
 
-### TOKEN GENERATE PUBLIC ACCESS 
-POST http://localhost:3000/token HTTP/1.1
+### TOKENATOR: GENERATE PUBLIC ACCESS 
+POST http://localhost:3000/tokenator HTTP/1.1
 accept-language: pt-BR,pt
 content-type: application/json
 
 {
     "target": "public_access",
     "issuer": "mercurius.com"
+}
+
+### TOKENATOR: RECOVERY PUBLIC ACCESS 
+POST http://localhost:3000/tokenator HTTP/1.1
+accept-language: pt-BR,pt
+content-type: application/json
+
+{
+    "target": "get_public_access",
+    "issuer": "mercurius.com"
+}
+
+### TOKENATOR: REVOKE PUBLIC ACCESS 
+POST http://localhost:3000/tokenator HTTP/1.1
+accept-language: pt-BR,pt
+content-type: application/json
+
+{
+    "target": "revoke_public_access",
+    "issuer": "mercurius.com",
+    "days": 90
+}
+
+### TOKENATOR: SHRINK REVOKED TOKENS 
+POST http://localhost:3000/tokenator HTTP/1.1
+accept-language: pt-BR,pt
+content-type: application/json
+
+{
+    "target": "revoke_shrink"
 }
 
 ### INDEX

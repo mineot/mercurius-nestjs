@@ -13,8 +13,8 @@ export class AppController {
     return this.appService.getProfile(language);
   }
 
-  @Post('token')
-  async token(@Body() body: any): Promise<any> {
-    return this.appService.getToken(body);
+  @Post('tokenator')
+  async tokenator(@Body() body: any): Promise<any> {
+    return this.appService.tokenator(body);
   }
 }
