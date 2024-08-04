@@ -79,7 +79,7 @@ describe('AppController', () => {
     jest.spyOn(appService, 'getProfile');
 
     await appController.index(language);
-    expect(appService.getProfile).toHaveBeenCalledTimes(1);
-    expect(appService.getProfile).toHaveBeenCalledWith(language);
+    expect(appService.fetchPublicData).toHaveBeenCalledTimes(1);
+    expect(appService.fetchPublicData).toHaveBeenCalledWith(language);
   });
 });

@@ -1,15 +1,21 @@
+import { AppTokenBody } from '@/app.params';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Language, Profile } from '@prisma/client';
-import { PrismaService } from '@shared/services/prisma.service';
+import { Language } from '@prisma/client';
+import { ProfileService } from '@public/profile.service';
 import { TokenService } from '@shared/services/token.service';
-import { AppTokenBody } from './app.params';
 
 @Injectable()
 export class AppService {
   constructor(
-    private readonly prisma: PrismaService,
     private readonly token: TokenService,
+    private readonly profile: ProfileService,
   ) {}
+
+  async fetchPublicData(language: Language): Promise<any> {
+    return {
+      profile: await this.profile.fetch(language),
+    };
+  }
 
   async tokenator(params: AppTokenBody): Promise<any> {
     const { target, message, issuer, days } = params;
@@ -34,14 +40,6 @@ export class AppService {
         this.badRequest(undefined, 'Invalid target');
         break;
     }
-  }
-
-  async getProfile(language: Language): Promise<Profile> {
-    const profile: Profile = await this.prisma.profile.findFirst({
-      where: { langId: language.id },
-    });
-
-    return profile;
   }
 
   private badRequest(value: any, errorMessage: string) {
