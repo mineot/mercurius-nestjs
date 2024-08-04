@@ -73,6 +73,10 @@ export class TokenService {
       where: { issuer },
     });
 
+    if (!token) {
+      throw new NotFoundException(`Token not found for issuer: ${issuer}`);
+    }
+
     return { public_access_token: token.value, issuer };
   }
 
