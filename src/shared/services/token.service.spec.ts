@@ -2,6 +2,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@shared/services/prisma.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TokenService } from '@shared/services/token.service';
+import { NotFoundException } from '@nestjs/common';
 
 describe('TokenService', () => {
   let jwtService: JwtService;
@@ -104,6 +105,53 @@ describe('TokenService', () => {
 
     await expect(tokenService.generatePublicAccess(issuer)).rejects.toThrow(
       'Database error',
+    );
+  });
+
+  it('should revoke public access and update token', async () => {
+    const issuer = 'test-issuer';
+    const days = 7;
+
+    const token = await prismaService.token.create({
+      data: {
+        id: 'TOKEN_ID',
+        value: 'test-token',
+        issuer,
+        revoked: false,
+        revoke_at: null,
+        revoke_days: null,
+      },
+    });
+
+    const result = await tokenService.revokePublicAccess(issuer, days);
+
+    expect(result).toEqual({
+      revoked: true,
+      remove_at: expect.any(Date),
+      remove_days: days,
+      issuer,
+    });
+
+    const updatedToken = await prismaService.token.findUnique({
+      where: {
+        id: token.id,
+      },
+    });
+
+    expect(updatedToken).toEqual({
+      ...token,
+      revoked: true,
+      revoke_at: expect.any(Date),
+      revoke_days: days,
+    });
+  });
+
+  it('should throw NotFoundException if token not found', async () => {
+    const issuer = 'test-issuer';
+    const days = 7;
+
+    await expect(tokenService.revokePublicAccess(issuer, days)).rejects.toThrow(
+      NotFoundException,
     );
   });
 });
