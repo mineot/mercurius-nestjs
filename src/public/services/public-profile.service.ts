@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { Language, Profile } from '@prisma/client';
 
 @Injectable()
-export class ProfileService {
+export class PublicProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
   async fetch(lang: Language): Promise<Profile> {

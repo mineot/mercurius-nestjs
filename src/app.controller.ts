@@ -2,6 +2,7 @@ import { AppService } from '@/app.service';
 import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { GetLanguage } from '@shared/decorators/language.decorator';
 import { Language } from '@prisma/client';
+import { Tokenator } from '@public/models/tokenator.model';
 
 @Controller()
 export class AppController {
@@ -14,7 +15,7 @@ export class AppController {
   }
 
   @Post('tokenator')
-  async tokenator(@Body() body: any): Promise<any> {
-    return this.appService.tokenator(body);
+  async tokenator(@Body() tokenator: Tokenator): Promise<any> {
+    return this.appService.tokenator(tokenator);
   }
 }

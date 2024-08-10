@@ -1,14 +1,14 @@
-import { AppTokenBody } from '@/app.params';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Language } from '@prisma/client';
-import { ProfileService } from '@public/profile.service';
-import { TokenService } from '@shared/services/token.service';
+import { PublicProfileService } from '@/public/services/public-profile.service';
+import { PublicTokenService } from '@public/services/public-token.service';
+import { Tokenator } from './public/models/tokenator.model';
 
 @Injectable()
 export class AppService {
   constructor(
-    private readonly token: TokenService,
-    private readonly profile: ProfileService,
+    private readonly publicToken: PublicTokenService,
+    private readonly profile: PublicProfileService,
   ) {}
 
   async fetchPublicData(language: Language): Promise<any> {
@@ -17,34 +17,19 @@ export class AppService {
     };
   }
 
-  async tokenator(params: AppTokenBody): Promise<any> {
-    const { target, message, issuer, days } = params;
-
-    switch (target) {
-      case 'random_secret':
-        this.badRequest(message, 'The attribute "message" is required');
-        return this.token.randomSecret(params.message);
-      case 'public_access':
-        this.badRequest(issuer, 'The attribute "issuer" is required');
-        return this.token.generatePublicAccess(issuer);
-      case 'get_public_access':
-        this.badRequest(issuer, 'The attribute "issuer" is required');
-        return this.token.getPublicAccess(issuer);
-      case 'revoke_public_access':
-        this.badRequest(issuer, 'The attribute "issuer" is required');
-        this.badRequest(days, 'The attribute "days" is required');
-        return this.token.revokePublicAccess(issuer, days);
-      case 'revoke_shrink':
-        return this.token.revokeShrink();
-      default:
-        this.badRequest(undefined, 'Invalid target');
-        break;
-    }
-  }
-
-  private badRequest(value: any, errorMessage: string) {
-    if (!value) {
-      throw new BadRequestException(errorMessage);
+  async tokenator(args: Tokenator): Promise<any> {
+    if (args.randomSecret) {
+      return this.publicToken.randomSecret(args);
+    } else if (args.createPublicAccess) {
+      return this.publicToken.createPublicAccess(args);
+    } else if (args.recoveryPublicAccess) {
+      return this.publicToken.recoveryPublicAccess(args);
+    } else if (args.revokePublicAccess) {
+      return this.publicToken.revokePublicAccess(args);
+    } else if (args.removeExpiredTokens) {
+      return this.publicToken.removeExpiredTokens();
+    } else {
+      throw new NotFoundException('invalid_tokenator');
     }
   }
 }

@@ -4,17 +4,17 @@ accept-language: pt-BR,pt
 content-type: application/json
 
 {
-    "target": "random_secret",
-    "message": "Hello! Just a random message to random secret"
+    "randomSecret": true,
+    "message": "Just a test!"
 }
 
-### TOKENATOR: GENERATE PUBLIC ACCESS 
+### TOKENATOR: CREATE PUBLIC ACCESS 
 POST http://localhost:3000/tokenator HTTP/1.1
 accept-language: pt-BR,pt
 content-type: application/json
 
 {
-    "target": "public_access",
+    "createPublicAccess": true,
     "issuer": "mercurius.com"
 }
 
@@ -24,7 +24,7 @@ accept-language: pt-BR,pt
 content-type: application/json
 
 {
-    "target": "get_public_access",
+    "recoveryPublicAccess": true,
     "issuer": "mercurius.com"
 }
 
@@ -34,20 +34,16 @@ accept-language: pt-BR,pt
 content-type: application/json
 
 {
-    "target": "revoke_public_access",
+    "revokePublicAccess": true,
     "issuer": "mercurius.com",
     "days": 90
 }
 
-### TOKENATOR: SHRINK REVOKED TOKENS 
+### TOKENATOR: REMOVE EXPIRED TOKENS 
 POST http://localhost:3000/tokenator HTTP/1.1
 accept-language: pt-BR,pt
 content-type: application/json
 
 {
-    "target": "revoke_shrink"
+    "removeExpiredTokens": true
 }
-
-### INDEX
-GET http://localhost:3000 HTTP/1.1
-accept-language: pt-BR,pt
