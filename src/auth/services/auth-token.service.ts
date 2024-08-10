@@ -4,14 +4,14 @@ import { PrismaService } from '@shared/services/prisma.service';
 import { User } from '@prisma/client';
 
 @Injectable()
-export class TokenService {
+export class AuthTokenService {
   constructor(
-    private readonly jwt: JwtService,
-    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async generateSignedUser(user: User): Promise<string> {
-    return this.jwt.signAsync({
+    return this.jwtService.signAsync({
       username: user.name,
       email: user.email,
       iss: 'user',
@@ -22,6 +22,6 @@ export class TokenService {
   }
 
   async verify(token: string): Promise<any> {
-    return this.jwt.verifyAsync(token);
+    return this.jwtService.verifyAsync(token);
   }
 }
