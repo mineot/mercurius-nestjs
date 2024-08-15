@@ -1,4 +1,4 @@
-### TOKENATOR: GENERATE SECRET KEY 
+### RANDOM SECRET KEY
 POST http://localhost:3000/tokenator HTTP/1.1
 accept-language: pt-BR,pt
 content-type: application/json
@@ -8,7 +8,7 @@ content-type: application/json
     "message": "Just a test!"
 }
 
-### TOKENATOR: CREATE PUBLIC ACCESS 
+### CREATE PUBLIC ACCESS 
 POST http://localhost:3000/tokenator HTTP/1.1
 accept-language: pt-BR,pt
 content-type: application/json
@@ -18,7 +18,7 @@ content-type: application/json
     "issuer": "mercurius.com"
 }
 
-### TOKENATOR: RECOVERY PUBLIC ACCESS 
+### RECOVERY PUBLIC ACCESS 
 POST http://localhost:3000/tokenator HTTP/1.1
 accept-language: pt-BR,pt
 content-type: application/json
@@ -28,7 +28,7 @@ content-type: application/json
     "issuer": "mercurius.com"
 }
 
-### TOKENATOR: REVOKE PUBLIC ACCESS 
+### REVOKE PUBLIC ACCESS 
 POST http://localhost:3000/tokenator HTTP/1.1
 accept-language: pt-BR,pt
 content-type: application/json
@@ -39,7 +39,7 @@ content-type: application/json
     "days": 90
 }
 
-### TOKENATOR: REMOVE EXPIRED TOKENS 
+### REMOVE EXPIRED TOKENS 
 POST http://localhost:3000/tokenator HTTP/1.1
 accept-language: pt-BR,pt
 content-type: application/json

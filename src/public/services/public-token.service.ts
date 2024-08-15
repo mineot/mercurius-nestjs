@@ -2,6 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@/shared/services/prisma.service';
 import { Tokenator } from '@public/models/tokenator.model';
 import { v4 as uudid } from 'uuid';
+import { Token } from '@prisma/client';
 
 import {
   BadRequestException,
@@ -9,7 +10,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Token } from '@prisma/client';
 
 @Injectable()
 export class PublicTokenService {
@@ -19,19 +19,33 @@ export class PublicTokenService {
   ) {}
 
   public async randomSecret({ message }: Tokenator): Promise<any> {
-    const data = {
-      id: uudid(),
-      date: new Date().getDate(),
-      message,
-    };
+    try {
+      const data = {
+        id: uudid(),
+        date: new Date().getDate(),
+        message,
+      };
 
-    return {
-      secret_key: btoa(JSON.stringify(data)),
-      generated_at: new Date(),
-    };
+      return {
+        secret_key: btoa(JSON.stringify(data)),
+        generated_at: new Date(),
+      };
+    } catch (err) {
+      throw new BadRequestException(err);
+    }
   }
 
   async createPublicAccess({ issuer }: Tokenator): Promise<any> {
+    const exists: number = await this.prismaService.token.count({
+      where: { issuer },
+    });
+
+    if (exists > 0) {
+      throw new ForbiddenException(
+        `The token for issuer ${issuer} already exists`,
+      );
+    }
+
     try {
       const token: string = await this.jwtService.signAsync({
         date: new Date().toISOString(),
@@ -53,21 +67,17 @@ export class PublicTokenService {
         generated_at: new Date(),
       };
     } catch (err) {
-      if (err.code === 'P2002') {
-        throw new ForbiddenException('Token already exists');
-      }
-
       throw new BadRequestException(err);
     }
   }
 
   async recoveryPublicAccess({ issuer }: Tokenator): Promise<any> {
     const token: Token = await this.prismaService.token.findFirst({
-      where: { issuer },
+      where: { issuer, revoked: false },
     });
 
     if (!token) {
-      throw new NotFoundException(`Token not found for issuer: ${issuer}`);
+      throw new NotFoundException(`Token not found for issuer ${issuer}`);
     }
 
     return {
