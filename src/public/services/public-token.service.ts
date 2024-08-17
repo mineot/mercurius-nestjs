@@ -1,7 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@/shared/services/prisma.service';
 import { Tokenator } from '@public/models/tokenator.model';
-import { v4 as uudid } from 'uuid';
 import { Token } from '@prisma/client';
 
 import {
@@ -17,23 +16,6 @@ export class PublicTokenService {
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
   ) {}
-
-  public async randomSecret({ message }: Tokenator): Promise<any> {
-    try {
-      const data = {
-        id: uudid(),
-        date: new Date().getDate(),
-        message,
-      };
-
-      return {
-        secret_key: btoa(JSON.stringify(data)),
-        generated_at: new Date(),
-      };
-    } catch (err) {
-      throw new BadRequestException(err);
-    }
-  }
 
   async createPublicAccess({ issuer }: Tokenator): Promise<any> {
     const exists: number = await this.prismaService.token.count({
