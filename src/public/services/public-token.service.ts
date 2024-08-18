@@ -1,57 +1,11 @@
-import { JwtService } from '@nestjs/jwt';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@/shared/services/prisma.service';
-import { Tokenator } from '@public/models/tokenator.model';
 import { Token } from '@prisma/client';
-
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Tokenator } from '@public/models/tokenator.model';
 
 @Injectable()
 export class PublicTokenService {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly prismaService: PrismaService,
-  ) {}
-
-  async createPublicAccess({ issuer }: Tokenator): Promise<any> {
-    const exists: number = await this.prismaService.token.count({
-      where: { issuer },
-    });
-
-    if (exists > 0) {
-      throw new ForbiddenException(
-        `The token for issuer ${issuer} already exists`,
-      );
-    }
-
-    try {
-      const token: string = await this.jwtService.signAsync({
-        date: new Date().toISOString(),
-        iss: issuer,
-        sub: 'public_access',
-        aud: 'guest',
-      });
-
-      await this.prismaService.token.create({
-        data: {
-          id: undefined,
-          value: token,
-          issuer,
-        },
-      });
-
-      return {
-        public_access_token: token,
-        generated_at: new Date(),
-      };
-    } catch (err) {
-      throw new BadRequestException(err);
-    }
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async recoveryPublicAccess({ issuer }: Tokenator): Promise<any> {
     const token: Token = await this.prismaService.token.findFirst({

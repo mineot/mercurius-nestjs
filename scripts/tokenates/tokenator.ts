@@ -1,31 +1,15 @@
+import { Command, Target, Tokenator } from './contract';
 import { hideBin } from 'yargs/helpers';
-import { Logger } from './logger';
-import { PrismaClient } from '@prisma/client';
+import { Logger } from '../logger';
+import { PrismaClient, Token } from '@prisma/client';
 import { v4 as uuid } from 'uuid';
+import { validator } from './validator';
 import yargs from 'yargs';
 
 import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
 
 dotenv.config();
-
-enum Target {
-  SECRET_KEY = 'secret_key',
-  PUBLIC_TOKEN = 'public_token',
-}
-
-enum Command {
-  CREATE = 'create',
-}
-
-interface Tokenator {
-  target: Target;
-  cmd: Command;
-  message?: string;
-  issuer?: string;
-  revoke?: boolean;
-  revoke_days?: number;
-}
 
 yargs(hideBin(process.argv))
   .scriptName('tokenator')
@@ -51,6 +35,16 @@ yargs(hideBin(process.argv))
           type: 'string',
           describe: 'Inform a message between quotes',
           demandOption: false,
+        })
+        .option('issuer', {
+          type: 'string',
+          describe: 'Inform a issuer',
+          demandOption: false,
+        })
+        .option('days', {
+          type: 'number',
+          describe: 'Inform a revoke days',
+          demandOption: false,
         });
     },
     async (argv) => {
@@ -59,34 +53,16 @@ yargs(hideBin(process.argv))
         cmd: argv.cmd as Command,
         message: argv.message as string,
         issuer: argv.issuer as string,
-        revoke: argv.revoke as boolean,
-        revoke_days: argv.revoke_days as number,
+        days: argv.days as number,
       };
 
       await validator(tokenator);
       await createRandomSecretKey(tokenator);
       await createPublicToken(tokenator);
+      await revokePublicToken(tokenator);
     },
   )
   .help().argv;
-
-async function validator(tokenator: Tokenator): Promise<boolean> {
-  const { target, cmd, message, issuer } = tokenator;
-
-  if (target === Target.SECRET_KEY && cmd === Command.CREATE && !message) {
-    Logger.warning(
-      'Please inform the "message" parameter to create the secret key',
-    );
-  }
-
-  if (target === Target.PUBLIC_TOKEN && cmd === Command.CREATE && !issuer) {
-    Logger.warning(
-      'Please inform the "issuer" parameter to create a public token',
-    );
-  }
-
-  return true;
-}
 
 async function createRandomSecretKey({ target, cmd, message }: Tokenator) {
   if (target === Target.SECRET_KEY && cmd === Command.CREATE) {
@@ -133,6 +109,40 @@ async function createPublicToken({ target, cmd, issuer }: Tokenator) {
 
       Logger.success('Generated public access token:', true);
       Logger.success(token);
+    } catch (err) {
+      Logger.fail(err.message);
+    } finally {
+      prisma.$disconnect();
+    }
+  }
+}
+
+async function revokePublicToken({ target, cmd, issuer, days }: Tokenator) {
+  if (target === Target.PUBLIC_TOKEN && cmd === Command.REVOKE) {
+    const prisma = new PrismaClient();
+
+    try {
+      const token: Token = await prisma.token.findFirst({
+        where: { issuer, revoked: false },
+      });
+
+      if (!token) {
+        Logger.warning(
+          `Token not found or already revoked for issuer ${issuer}`,
+        );
+      }
+
+      token.revoked = true;
+      token.revoke_at = new Date();
+      token.revoke_days = days;
+
+      const revokedToken: Token = await prisma.token.update({
+        where: { id: token.id },
+        data: token,
+      });
+
+      Logger.success('Revoked public access token:', true);
+      Logger.success(JSON.stringify(revokedToken));
     } catch (err) {
       Logger.fail(err.message);
     } finally {
