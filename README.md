@@ -7,13 +7,13 @@ Este repositório contém o backend do projeto Mercurius, desenvolvido utilizand
 - Node.js v20 ou superior
 - npm v10 ou superior
 
-Verifique se o PM2 está instalado:
+### Verifique se o PM2 está instalado
 
 ```shell
 pm2 -v
 ```
 
-Se o PM2 não estiver instalado, instale com:
+### Se o PM2 não estiver instalado, instale com
 
 ```shell
 npm install -g pm2
@@ -23,32 +23,44 @@ npm install -g pm2
 
 ### Clonagem ou atualização do projeto
 
-```shell
-# Clonar o repositório
-git clone https://github.com/mineot/mercurius-nestjs.git
+Clonar o repositório
 
-# Acessar a pasta recém-criada do projeto
+```shell
+git clone https://github.com/mineot/mercurius-nestjs.git
+```
+
+Acessar a pasta recém-criada do projeto
+
+```shell
 cd mercurius-nestjs
 ```
 
 ### Ou, caso o projeto já exista, atualize
 
-```shell
-# Acessar a pasta do projeto
-cd mercurius-nestjs
+Acessar a pasta do projeto
 
-# Atualizar o repositório
+```shell
+cd mercurius-nestjs
+```
+
+Atualizar o repositório
+
+```shell
 git pull --rebase
 git fetch --tags
 ```
 
 ### Acessar a Tag para Deploy
 
-```shell
-# Liste as tags disponíveis
-git tag -l
+Liste as tags disponíveis
 
-# Acesse a tag que será utilizada em produção
+```shell
+git tag -l
+```
+
+Acesse a tag que será utilizada em produção
+
+```shell
 git checkout tags/<tag_code>
 ```
 
@@ -66,7 +78,7 @@ npx ts-node scripts/create_secret_key --message "<Informe uma message>"
 
 ### Configuração de Variáveis de Ambiente
 
-Crie ou edite o arquivo .env na raiz do projeto e adicione o conteúdo abaixo:
+Crie ou edite o arquivo .env na raiz do projeto e adicione o conteúdo abaixo
 
 ```shell
 JWT_SECRET="<Sua chave secreta criada randomicamente ou por outros meios>"
@@ -74,7 +86,7 @@ JWT_SECRET="<Sua chave secreta criada randomicamente ou por outros meios>"
 
 ### Criação de Token de Acesso Público
 
-Crie um token de acesso público que será utilizado pelo frontend para acessar o conteúdo público do projeto.
+Crie um token de acesso público que será utilizado pelo frontend para acessar o conteúdo público do projeto
 
 ```shell
 npx ts-node scripts/create_public_token --issuer "<Informe o nome do projeto>"
@@ -82,7 +94,7 @@ npx ts-node scripts/create_public_token --issuer "<Informe o nome do projeto>"
 
 ### Migração e Seeders
 
-Rode a migração do Prisma em produção e execute os seeders:
+Rode a migração do Prisma em produção e execute os seeders
 
 ```shell
 npx prisma migrate deploy
@@ -91,16 +103,20 @@ npm run db:seeders
 
 ### Compilação e Execução
 
-Compile o projeto:
+Compile o projeto
 
 ```shell
 npm run build
 ```
 
-Em seguida, execute-o utilizando o PM2:
+Em seguida, execute-o utilizando o PM2
 
 ```shell
 pm2 start dist/main.js --name "Nome do projeto"
+```
 
+Verifique a situação do projeto
+
+```shell
 pm2 status
 ```
