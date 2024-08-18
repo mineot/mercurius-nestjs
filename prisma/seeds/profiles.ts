@@ -22,7 +22,7 @@ const profiles = {
   BR: {
     id: undefined,
     langId: null,
-    name: 'José Ninguem',
+    name: 'João Ninguem',
     job_title: 'Assistente de Assuntos Gerais',
     summary:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam in magna dui. Proin tristique, nisl',

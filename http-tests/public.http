@@ -1,0 +1,5 @@
+### GET PUBLIC PROFILE
+GET http://localhost:3000/ HTTP/1.1
+accept-language: pt-BR,pt
+content-type: application/json
+authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRlIjoiMjAyNC0wOC0xOFQxNjo0MjowMy4wOTBaIiwiaXNzIjoibWVyY3VyaXVzLmNvbSIsInN1YiI6InB1YmxpY19hY2Nlc3MiLCJhdWQiOiJndWVzdCIsImlhdCI6MTcyMzk5OTMyM30.UN9AS29e_YuGGMfNoJ_MDgd3lvAssd17kHFGrpcGv-o

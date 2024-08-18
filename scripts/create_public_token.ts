@@ -44,7 +44,9 @@ yargs(hideBin(process.argv))
           aud: 'guest',
         };
 
-        const token: string = jwt.sign(payload, process.env.JWT_SECRET, {});
+        const token: string = jwt.sign(payload, process.env.JWT_SECRET, {
+          algorithm: 'HS256',
+        });
 
         await prisma.token.create({
           data: {

@@ -11,8 +11,6 @@ export class PublicProfileService {
       where: { langId: lang.id },
     });
 
-    console.log(profile);
-
     return profile;
   }
 }
