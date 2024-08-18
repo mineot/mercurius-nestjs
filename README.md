@@ -1,121 +1,115 @@
 # Mercurius Backend - NestJS
 
-Este repositório contém o backend do projeto Mercurius, desenvolvido utilizando o framework NestJS. O Mercurius é um sistema CMS (Content Management System) rápido e simples, projetado para facilitar a criação e a gestão de conteúdo digital. Este guia irá orientá-lo através das etapas necessárias para realizar o deploy em um ambiente de produção.
+This repository contains the backend of the Mercurius project, developed using the NestJS framework. Mercurius is a fast and simple Content Management System (CMS) designed to facilitate the creation and management of digital content. This guide will walk you through the steps required to deploy in a production environment.
 
-## Requisitos
+## Requirements
 
-- Node.js v20 ou superior
-- npm v10 ou superior
+- Node.js v20 or higher
+- npm v10 or higher
 
-### Verifique se o PM2 está instalado
+### Verify PM2 Installation
+
+Check if PM2 is installed:
 
 ```shell
 pm2 -v
 ```
 
-### Se o PM2 não estiver instalado, instale com
+If PM2 is not installed, you can install it with:
 
 ```shell
 npm install -g pm2
 ```
 
-## Deploy em produção
+## Production Deployment
 
-### Clonagem ou atualização do projeto
+### Cloning or Updating the Project
 
-Clonar o repositório
+If you need to clone the repository:
 
 ```shell
 git clone https://github.com/mineot/mercurius-nestjs.git
-```
-
-Acessar a pasta recém-criada do projeto
-
-```shell
 cd mercurius-nestjs
 ```
 
-### Ou, caso o projeto já exista, atualize
-
-Acessar a pasta do projeto
+If the project is already cloned, update it:
 
 ```shell
 cd mercurius-nestjs
-```
-
-Atualizar o repositório
-
-```shell
 git pull --rebase
 git fetch --tags
 ```
 
-### Acessar a Tag para Deploy
+### Accessing the Deployment Tag
 
-Liste as tags disponíveis
+List the available tags:
 
 ```shell
 git tag -l
 ```
 
-Acesse a tag que será utilizada em produção
+Check out the tag to be used in production:
 
 ```shell
 git checkout tags/<tag_code>
 ```
 
-### Instalação das Dependências
+### Installing Dependencies
+
+Install the project dependencies:
 
 ```shell
 npm install
 ```
 
-### Criação de Chave Secreta (Opcional)
+### Creating a Secret Key (Optional)
+
+Create a secret key for use with JWT, if needed:
 
 ```shell
-npx ts-node scripts/create_secret_key --message "<Informe uma message>"
+npx ts-node scripts/create_secret_key --message "<Provide a message>"
 ```
 
-### Configuração de Variáveis de Ambiente
+### Environment Variables Configuration
 
-Crie ou edite o arquivo .env na raiz do projeto e adicione o conteúdo abaixo
+Create or edit the `.env` file in the project root and add the following content:
 
 ```shell
-JWT_SECRET="<Sua chave secreta criada randomicamente ou por outros meios>"
+JWT_SECRET="<Your randomly generated or otherwise obtained secret key>"
 ```
 
-### Criação de Token de Acesso Público
+### Creating a Public Access Token
 
-Crie um token de acesso público que será utilizado pelo frontend para acessar o conteúdo público do projeto
+Generate a public access token that will be used by the frontend to access the project's public content:
 
 ```shell
-npx ts-node scripts/create_public_token --issuer "<Informe o nome do projeto>"
+npx ts-node scripts/create_public_token --issuer "<Provide the project name>"
 ```
 
-### Migração e Seeders
+### Migration and Seeders
 
-Rode a migração do Prisma em produção e execute os seeders
+Run the Prisma migration in production and execute the seeders:
 
 ```shell
 npx prisma migrate deploy
 npm run db:seeders
 ```
 
-### Compilação e Execução
+### Compilation and Execution
 
-Compile o projeto
+Compile the project:
 
 ```shell
 npm run build
 ```
 
-Em seguida, execute-o utilizando o PM2
+Run the project using PM2:
 
 ```shell
-pm2 start dist/main.js --name "Nome do projeto"
+pm2 start dist/main.js --name "Project Name"
 ```
 
-Verifique a situação do projeto
+Check the application status:
 
 ```shell
 pm2 status
