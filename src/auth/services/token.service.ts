@@ -3,11 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 
 @Injectable()
-export class AuthTokenService {
-  constructor(private readonly jwtService: JwtService) {}
+export class TokenService {
+  constructor(private readonly jwt: JwtService) {}
 
   async generateSignedUser(user: User): Promise<string> {
-    return this.jwtService.signAsync({
+    return this.jwt.signAsync({
       username: user.name,
       email: user.email,
       iss: 'user',
@@ -18,6 +18,6 @@ export class AuthTokenService {
   }
 
   async verify(token: string): Promise<any> {
-    return this.jwtService.verifyAsync(token);
+    return this.jwt.verifyAsync(token);
   }
 }
