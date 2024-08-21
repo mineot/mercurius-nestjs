@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Language } from '@prisma/client';
-import { PublicProfileService } from '@/public/services/public-profile.service';
+import { ProfileService } from '@/shared/services/profile.service';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly profile: PublicProfileService) {}
+  constructor(private readonly profile: ProfileService) {}
 
   async fetchPublicData(language: Language): Promise<any> {
     return {

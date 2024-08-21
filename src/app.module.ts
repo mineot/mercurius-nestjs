@@ -7,7 +7,6 @@ import { AdminModule } from '@/admin/admin.module';
 import { AuthModule } from '@/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
-import { PublicModule } from '@/public/public.module';
 import { SharedModule } from '@/shared/shared.module';
 
 import { LanguageInterceptor } from '@/shared/interceptors/language.interceptor';
@@ -16,7 +15,6 @@ import { LanguageInterceptor } from '@/shared/interceptors/language.interceptor'
   imports: [
     AdminModule,
     AuthModule,
-    PublicModule,
     SharedModule,
     ConfigModule.forRoot({ isGlobal: true }),
     JwtModule.register({
