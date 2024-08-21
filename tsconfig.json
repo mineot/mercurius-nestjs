@@ -18,11 +18,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@/*": ["src/*"],
-      "@admin/*": ["src/admin/*"],
-      "@auth/*": ["src/auth/*"],
-      "@public/*": ["src/public/*"],
-      "@shared/*": ["src/shared/*"]
+      "@/*": ["src/*"]
     }
   }
 }

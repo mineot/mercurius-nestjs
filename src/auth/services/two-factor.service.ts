@@ -6,7 +6,7 @@ import * as speakeasy from 'speakeasy';
 import {
   GeneratedSecret,
   Verification,
-} from '@auth/contracts/two-factor.contract';
+} from '@/auth/contracts/two-factor.contract';
 
 @Injectable()
 export class TwoFactorService {

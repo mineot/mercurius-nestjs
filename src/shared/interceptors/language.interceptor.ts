@@ -1,6 +1,6 @@
 import { Language } from '@prisma/client';
 import { Observable } from 'rxjs';
-import { PrismaService } from '@shared/services/prisma.service';
+import { PrismaService } from '@/shared/utils/prisma.service';
 
 import {
   CallHandler,

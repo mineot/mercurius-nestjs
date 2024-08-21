@@ -1,4 +1,4 @@
-import { PrismaService } from '@shared/services/prisma.service';
+import { PrismaService } from '@/shared/utils/prisma.service';
 import { Token } from '@prisma/client';
 import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';

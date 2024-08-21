@@ -1,5 +1,5 @@
 import { Controller, Post } from '@nestjs/common';
-import { TwoFactorService } from '@auth/services/two-factor.service';
+import { TwoFactorService } from '@/auth/services/two-factor.service';
 import { User } from '@prisma/client';
 
 @Controller('auth')
