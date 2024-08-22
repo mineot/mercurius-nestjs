@@ -10,6 +10,7 @@ async function userData(): Promise<User> {
     name: 'Administrator',
     email: 'admin@admin.com',
     password: await bcrypt.hash('admin!123987', 10),
+    twoFactorSecret: null,
   };
 }
 

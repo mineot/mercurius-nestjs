@@ -8,12 +8,21 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(uuid())
-  name      String
-  email     String  @unique
-  password  String
+  id              String  @id @default(uuid())
+  name            String
+  email           String  @unique
+  password        String
+  twoFactorSecret String?
 
   @@map("users")
+}
+
+model Configuration {
+  id                String  @id @default(uuid())
+  allow_register    Boolean @default(false)
+  allow_two_factor  Boolean @default(false)
+
+  @@map("configurations")
 }
 
 model Token {
