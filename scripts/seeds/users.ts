@@ -1,5 +1,12 @@
 import { PrismaClient, User } from '@prisma/client';
-import { error, finish, info, start, success, warn } from './helper/logger';
+import {
+  error,
+  finish,
+  info,
+  start,
+  success,
+  warn,
+} from '../helpers/logger_seeders';
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();

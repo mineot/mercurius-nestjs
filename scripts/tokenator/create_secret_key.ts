@@ -1,5 +1,5 @@
 import { hideBin } from 'yargs/helpers';
-import { Logger } from './logger';
+import { Logger } from '../helpers/logger';
 import { v4 as uuid } from 'uuid';
 import yargs from 'yargs';
 
@@ -27,8 +27,8 @@ yargs(hideBin(process.argv))
         message,
       };
 
-      Logger.success('Generated Secret Key:', true);
-      Logger.success(btoa(JSON.stringify(data)));
+      Logger.done('Generated Secret Key:');
+      Logger.done(btoa(JSON.stringify(data)));
     },
   )
   .help().argv;

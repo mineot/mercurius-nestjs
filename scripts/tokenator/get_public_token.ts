@@ -1,5 +1,5 @@
 import { hideBin } from 'yargs/helpers';
-import { Logger } from './logger';
+import { Logger } from './helpers/logger_tokenator';
 import { PrismaClient, Token } from '@prisma/client';
 import yargs from 'yargs';
 

@@ -1,5 +1,5 @@
 import { hideBin } from 'yargs/helpers';
-import { Logger } from './logger';
+import { Logger } from '../helpers/logger';
 import { PrismaClient } from '@prisma/client';
 import yargs from 'yargs';
 
@@ -34,7 +34,7 @@ yargs(hideBin(process.argv))
         });
 
         if (exists > 0) {
-          Logger.warning(`The token for issuer "${issuer}" already exists`);
+          Logger.warn(`The token for issuer "${issuer}" already exists`);
         }
 
         const payload = {
@@ -56,8 +56,8 @@ yargs(hideBin(process.argv))
           },
         });
 
-        Logger.success('Generated Public Token:', true);
-        Logger.success(token);
+        Logger.done('Generated Public Token:');
+        Logger.done(token);
       } catch (err) {
         Logger.fail(err.message);
       } finally {

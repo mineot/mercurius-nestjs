@@ -1,31 +1,25 @@
 import { hideBin } from 'yargs/helpers';
-import { Logger } from './logger';
+import { Logger } from './helpers/logger_tokenator';
 import { PrismaClient, Token } from '@prisma/client';
 import yargs from 'yargs';
 
 yargs(hideBin(process.argv))
-  .scriptName('revoke_public_token')
+  .scriptName('remove_public_token')
   .usage('$0 <cmd> [args]')
-  .epilogue('Revoke public token for issuer if exists')
+  .epilogue('Remove public token for issuer if exists')
   .command(
     '*',
     'Perform user actions',
     (yargs) => {
-      return yargs
-        .option('issuer', {
-          type: 'string',
-          describe:
-            'Inform the issuer to revoke the public token, it should be between quotes',
-          demandOption: true,
-        })
-        .option('days', {
-          type: 'number',
-          describe: 'Inform the days to keep the public token',
-          demandOption: true,
-        });
+      return yargs.option('issuer', {
+        type: 'string',
+        describe:
+          'Inform the issuer to remove the public token, it should be between quotes',
+        demandOption: true,
+      });
     },
     async (argv) => {
-      const { issuer, days } = argv;
+      const { issuer } = argv;
 
       const prisma = new PrismaClient();
 
@@ -38,16 +32,11 @@ yargs(hideBin(process.argv))
           Logger.warning(`Token not found for issuer "${issuer}"`);
         }
 
-        token = await prisma.token.update({
+        token = await prisma.token.delete({
           where: { id: token.id },
-          data: {
-            revoked: true,
-            revoke_at: new Date(),
-            revoke_days: days,
-          },
         });
 
-        Logger.success('Revoked Public Token:', true);
+        Logger.success('Removed Public Token:', true);
         Logger.success(`Issuer: ${token.issuer}`);
         Logger.success(`Token: ${token.value}`);
         Logger.success(`Revoked: ${token.revoked ? 'Yes' : 'No'}`);

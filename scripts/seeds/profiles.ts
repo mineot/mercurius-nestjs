@@ -1,5 +1,5 @@
 import { Language, PrismaClient, Profile } from '@prisma/client';
-import { error, finish, info, start, success } from './helper/logger';
+import { error, finish, info, start, success } from '../helpers/logger_seeders';
 import { warn } from 'console';
 
 const prisma = new PrismaClient();
