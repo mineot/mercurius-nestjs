@@ -1,5 +1,5 @@
 import { hideBin } from 'yargs/helpers';
-import { Logger } from './helpers/logger_tokenator';
+import { Logger } from '../helpers/logger';
 import { PrismaClient, Token } from '@prisma/client';
 import yargs from 'yargs';
 
@@ -29,19 +29,19 @@ yargs(hideBin(process.argv))
         });
 
         if (!token) {
-          Logger.warning(`Token not found for issuer "${issuer}"`);
+          Logger.warn(`Token not found for issuer "${issuer}"`);
         }
 
         token = await prisma.token.delete({
           where: { id: token.id },
         });
 
-        Logger.success('Removed Public Token:', true);
-        Logger.success(`Issuer: ${token.issuer}`);
-        Logger.success(`Token: ${token.value}`);
-        Logger.success(`Revoked: ${token.revoked ? 'Yes' : 'No'}`);
-        Logger.success(`Revoked At: ${token.revoke_at}`);
-        Logger.success(`Revoked Days: ${token.revoke_days}`);
+        Logger.done('Removed Public Token:');
+        Logger.done(`Issuer: ${token.issuer}`);
+        Logger.done(`Token: ${token.value}`);
+        Logger.done(`Revoked: ${token.revoked ? 'Yes' : 'No'}`);
+        Logger.done(`Revoked At: ${token.revoke_at}`);
+        Logger.done(`Revoked Days: ${token.revoke_days}`);
       } catch (err) {
         Logger.fail(err.message);
       } finally {
