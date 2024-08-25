@@ -22,6 +22,7 @@ export class Logger {
     console.log(colors.finish(lines));
     console.log(colors.finish(`Finish: ${text}`));
     console.log(colors.finish(equals));
+    Logger.breakline();
   }
 
   static title(text: string) {
