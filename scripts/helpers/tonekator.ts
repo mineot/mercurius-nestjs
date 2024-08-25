@@ -5,25 +5,38 @@ import yargs, { Options } from 'yargs';
 
 dotenv.config();
 
-export abstract class Tokenator {
+export class Tokenator {
   private $scriptName = 'Tokenator';
   private $epilogue = 'Tokenator Script';
   private $options: any = {};
+  private $start: string;
+  private $finish: string;
 
-  init(scriptName: string, epilogue: string) {
+  private $command: (argv: any) => Promise<any> = async (argv) => {};
+
+  scriptName(scriptName: string) {
     this.$scriptName = scriptName;
+  }
+
+  epilogue(epilogue: string) {
     this.$epilogue = epilogue;
   }
 
-  addOption(name: string, args: Options) {
+  option(name: string, args: Options) {
     this.$options[name] = args;
   }
 
-  abstract start(): Promise<void>;
+  start(start: string) {
+    this.$start = start;
+  }
 
-  abstract finish(): Promise<void>;
+  finish(finish: string) {
+    this.$finish = finish;
+  }
 
-  abstract commands(argv: any): Promise<void>;
+  command(fn: (argv: any) => Promise<any>) {
+    this.$command = fn;
+  }
 
   async run() {
     const script = yargs(hideBin(process.argv));
@@ -38,12 +51,12 @@ export abstract class Tokenator {
       (yargs) => yargs.options(this.$options),
       async (argv) => {
         try {
-          await this.start();
-          await this.commands(argv);
+          Logger.start(this.$start);
+          await this.$command(argv);
         } catch (error) {
           Logger.fail(error);
         } finally {
-          await this.finish();
+          Logger.finish(this.$finish);
         }
       },
     );

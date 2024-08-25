@@ -2,44 +2,29 @@ import { Logger } from '../helpers/logger';
 import { Tokenator } from '../helpers/tonekator';
 import { v4 as uuid } from 'uuid';
 
-class CreateSecretKey extends Tokenator {
-  constructor() {
-    super();
+const createSecretKey = new Tokenator();
+createSecretKey.scriptName('create_secret_key');
+createSecretKey.epilogue('Generate a random secret keys');
+createSecretKey.start('Generating Secret Key');
+createSecretKey.finish('Finished Secret Key Generation');
 
-    this.init('create_secret_key', 'Generate a random secret keys');
+createSecretKey.option('message', {
+  type: 'string',
+  describe: 'Inform a message to generate a secret key, it should be between quotes',
+  demandOption: true,
+});
 
-    this.addOption('message', {
-      type: 'string',
-      describe: 'Inform a message to generate a secret key, it should be between quotes',
-      demandOption: true,
-    });
-  }
+createSecretKey.command(async (argv: any): Promise<void> => {
+  const { message } = argv;
 
-  start(): Promise<void> {
-    Logger.start('Generating Secret Key');
-    return;
-  }
+  const data = {
+    id: uuid(),
+    date: new Date().getDate(),
+    message,
+  };
 
-  finish(): Promise<void> {
-    Logger.finish('Finished Secret Key Generation');
-    return;
-  }
+  Logger.done('Generated Secret Key:');
+  Logger.done(btoa(JSON.stringify(data)));
+});
 
-  commands(argv: any): Promise<void> {
-    const { message } = argv;
-
-    const data = {
-      id: uuid(),
-      date: new Date().getDate(),
-      message,
-    };
-
-    Logger.done('Generated Secret Key:');
-    Logger.done(btoa(JSON.stringify(data)));
-
-    return;
-  }
-}
-
-const createSecretKey = new CreateSecretKey();
 createSecretKey.run();
