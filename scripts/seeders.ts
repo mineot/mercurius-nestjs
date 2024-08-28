@@ -1,7 +1,7 @@
 import { userSeeder } from './seeds/users';
 import { languagesSeeder } from './seeds/languages';
 import { termsSeeder } from './seeds/terms';
-import { profilesSeeder } from './seeds/profiles';
+import { profilesSeeder } from '../prisma/seeds/profiles';
 import { configurationSeeder } from './seeds/configurations';
 
 async function seeders(): Promise<void> {

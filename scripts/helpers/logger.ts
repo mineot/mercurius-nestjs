@@ -3,9 +3,11 @@ const colors = require('colors');
 colors.setTheme({
   start: ['bold', 'cyan'],
   title: ['bold', 'magenta'],
+  description: ['brightBlue'],
   fail: ['brightRed'],
   warn: ['brightYellow'],
-  ok: ['brightGreen'],
+  done: ['brightGreen'],
+  end: ['brightCyan'],
   finish: ['bold', 'cyan'],
 });
 
@@ -29,6 +31,10 @@ export class Logger {
     console.log(colors.title(text));
   }
 
+  static description(text: string) {
+    console.log(colors.description(text));
+  }
+
   static fail(err: Error) {
     console.log(colors.fail(err.message));
     process.exit(1);
@@ -39,7 +45,11 @@ export class Logger {
   }
 
   static done(text: string) {
-    console.log(colors.ok(text));
+    console.log(colors.done(text));
+  }
+
+  static end(text: string) {
+    console.log(colors.end(text));
   }
 
   static breakline() {
