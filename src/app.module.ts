@@ -8,8 +8,6 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { SharedModule } from '@/shared/shared.module';
 
-import { LanguageInterceptor } from '@/shared/interceptors/language.interceptor';
-
 @Module({
   imports: [
     AdminModule,
@@ -19,7 +17,10 @@ import { LanguageInterceptor } from '@/shared/interceptors/language.interceptor'
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: {},
+      signOptions: {
+        algorithm: 'HS512',
+        expiresIn: '1d',
+      },
     }),
   ],
   controllers: [AppController],

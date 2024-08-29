@@ -3,12 +3,7 @@ import { Token } from '@prisma/client';
 import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
 
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 
 dotenv.config();
 
@@ -26,7 +21,7 @@ export class PublicAccessGuard implements CanActivate {
       }
 
       const payload: any = jwt.verify(authorization, process.env.JWT_SECRET, {
-        algorithms: ['HS256'],
+        algorithms: ['HS512'],
         ignoreExpiration: true,
       });
 
