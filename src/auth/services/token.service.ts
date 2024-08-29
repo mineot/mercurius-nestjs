@@ -8,12 +8,11 @@ export class TokenService {
 
   async generateSignedUser(user: User): Promise<string> {
     return this.jwt.signAsync({
-      username: user.name,
       email: user.email,
-      iss: 'user',
       sub: user.id,
+      iss: 'user',
       aud: 'admin',
-      exp: 86400, //24hrs
+      exp: '1d',
     });
   }
 

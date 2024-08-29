@@ -92,7 +92,7 @@ Run the Prisma migration in production and execute the seeders:
 
 ```shell
 npx prisma migrate deploy
-npm run db:seeders
+npm run db:seedes
 ```
 
 ### Compilation and Execution
