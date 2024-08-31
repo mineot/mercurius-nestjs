@@ -1,9 +1,9 @@
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { DecodeUtil } from '../utils/decode';
 import { PrismaService } from '@/shared/core/prisma.service';
 import { Token } from '@prisma/client';
 import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
-
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 
 dotenv.config();
 
@@ -14,23 +14,22 @@ export class PublicAccessGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
       const request = context.switchToHttp().getRequest();
-      const { authorization } = request.headers;
+      const bearer: string = DecodeUtil.extractToken(request.headers.authorization);
 
-      if (!authorization) {
-        throw new Error('token not found');
-      }
-
-      const payload: any = jwt.verify(authorization, process.env.JWT_SECRET, {
+      const payload: any = jwt.verify(bearer, process.env.JWT_SECRET, {
         algorithms: ['HS512'],
         ignoreExpiration: true,
       });
 
       const token: Token = await this.prisma.token.findFirst({
-        where: { issuer: payload.iss, revoked: false },
+        where: {
+          issuer: payload.iss,
+          revoked: false,
+        },
       });
 
       if (!token) {
-        throw new Error('token register not found or revoked');
+        throw new Error('Token register not found or revoked');
       }
 
       return true;
