@@ -18,7 +18,7 @@ export class SignerService {
 
   async signUp(username: string, password: string): Promise<void> {}
 
-  async forgotPassword(email: string): Promise<void> {}
+  async recoveryPassword(email: string): Promise<void> {}
 
   async changePassword(password: string): Promise<void> {}
 }
