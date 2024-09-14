@@ -6,7 +6,7 @@ import { Language } from '@prisma/client';
 export class LanguageService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findMany(): Promise<Language[]> {
+  async fetchAll(): Promise<Language[]> {
     return this.prismaService.language.findMany();
   }
 }

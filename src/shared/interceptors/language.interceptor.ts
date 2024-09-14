@@ -12,7 +12,7 @@ export class LanguageInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest();
     const accepted = request.headers['accept-language'];
 
-    const languages: Language[] = await this.languageService.findMany();
+    const languages: Language[] = await this.languageService.fetchAll();
 
     let preferred = languages.find(
       (language: Language) =>

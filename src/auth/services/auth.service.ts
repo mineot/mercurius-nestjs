@@ -36,7 +36,7 @@ export class AuthService {
       }
     }
 
-    return { token: await this.tokenatorService.generateToken(user) } as Logged;
+    return { token: await this.tokenatorService.create(user) } as Logged;
   }
 
   async register(register: Register): Promise<Logged> {
