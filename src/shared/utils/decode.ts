@@ -1,7 +1,9 @@
+import { UnauthorizedException } from '@nestjs/common';
+
 export class DecodeUtil {
   static extractToken(authorization: string): string {
     if (!authorization) {
-      throw new Error('Token not found!');
+      throw new UnauthorizedException('Token not found!');
     }
 
     const regex = /^Bearer\s+([A-Za-z0-9\-._~+/]+=*)$/;
@@ -9,7 +11,7 @@ export class DecodeUtil {
     const match = authorization.match(regex);
 
     if (!match) {
-      throw new Error('Invalid token!');
+      throw new UnauthorizedException('Invalid token!');
     }
 
     return match[1];

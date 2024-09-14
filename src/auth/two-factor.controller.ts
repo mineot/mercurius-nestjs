@@ -7,7 +7,7 @@ export class TwoFactorController {
 
   // TODO finish this implementation
   @Post('enable')
-  async enable2fa() {
+  async enable() {
     const { secret, otpauth_url } = await this.twoFactorAuthService.generateSecret(null);
     const qrCode = await this.twoFactorAuthService.generateQrCode(otpauth_url);
     // Store secret in database
@@ -16,7 +16,7 @@ export class TwoFactorController {
 
   // TODO finish this implementation
   @Post('verify')
-  async enableVerify2fa() {
+  async verify() {
     const isValid = this.twoFactorAuthService.verifyToken({
       secret: 'secret',
       token: 'token',

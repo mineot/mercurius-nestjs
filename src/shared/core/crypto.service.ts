@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CryptoService {
-  async encrypt(text: string): Promise<string> {
+  async hash(text: string): Promise<string> {
     return await bcrypt.hash(text, 10);
   }
 

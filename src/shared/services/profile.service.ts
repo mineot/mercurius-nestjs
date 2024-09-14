@@ -4,13 +4,11 @@ import { PrismaService } from '@/shared/core/prisma.service';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
   async fetch(language: Language): Promise<Profile> {
-    const profile: Profile = await this.prisma.profile.findFirst({
+    return await this.prismaService.profile.findFirst({
       where: { langId: language.id },
     });
-
-    return profile;
   }
 }
