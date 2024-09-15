@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { Language, Profile } from '@prisma/client';
 import { PrismaService } from '@/shared/core/prisma.service';
+
+import { FindBy, FindedBy } from './contracts/profile.contract';
 
 @Injectable()
 export class ProfileService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async fetch(language: Language): Promise<Profile> {
+  async findBy(findBy: FindBy): FindedBy {
     return await this.prismaService.profile.findFirst({
-      where: { langId: language.id },
+      where: findBy,
     });
   }
 }

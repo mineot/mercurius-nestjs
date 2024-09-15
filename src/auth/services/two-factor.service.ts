@@ -3,10 +3,7 @@ import { User } from '@prisma/client';
 import * as qrcode from 'qrcode';
 import * as speakeasy from 'speakeasy';
 
-import {
-  GeneratedSecret,
-  Verification,
-} from '@/auth/contracts/two-factor.contract';
+import { GeneratedSecret, Verification } from '@/auth/services/contracts/two-factor.contract';
 
 @Injectable()
 export class TwoFactorService {

@@ -1,5 +1,9 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword } from 'class-validator';
 
+export type Logged = Promise<{
+  token: string;
+}>;
+
 export class Login {
   @IsNotEmpty()
   @IsEmail()
@@ -27,8 +31,4 @@ export class Register {
   @IsNotEmpty()
   @IsStrongPassword()
   password: string;
-}
-
-export interface Logged {
-  token: string;
 }

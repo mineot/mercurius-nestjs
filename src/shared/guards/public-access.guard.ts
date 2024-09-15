@@ -22,7 +22,7 @@ export class PublicAccessGuard implements CanActivate {
         ignoreExpiration: true,
       });
 
-      const token: Token = await this.tokenService.findTokenBy({
+      const token: Token = await this.tokenService.findBy({
         issuer: payload.iss,
         revoked: false,
       });

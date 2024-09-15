@@ -1,8 +1,8 @@
 import { Token } from '@prisma/client';
 
-export type TokenFinded = Promise<Token>;
+export type Finded = Promise<Token>;
 
-export interface FindToken {
+export interface FindBy {
   issuer?: string;
   revoked?: boolean;
 }

@@ -1,4 +1,4 @@
-import { FindToken, TokenFinded } from './token.contract';
+import { FindBy, Finded } from './contracts/token.contract';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../core/prisma.service';
 
@@ -6,12 +6,9 @@ import { PrismaService } from '../core/prisma.service';
 export class TokenService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findTokenBy({ issuer, revoked }: FindToken): TokenFinded {
+  async findBy(findBy: FindBy): Finded {
     return this.prismaService.token.findFirst({
-      where: {
-        issuer,
-        revoked,
-      },
+      where: findBy,
     });
   }
 }

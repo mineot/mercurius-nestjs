@@ -1,7 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
-import { PrismaService } from '@/shared/core/prisma.service';
 import { CryptoService } from '@/shared/core/crypto.service';
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '@/shared/core/prisma.service';
+
+import {
+  VerifyBy,
+  FindBy,
+  Finded,
+  Exists,
+  ValidatePassword,
+  ValidPassword,
+  Create,
+  Created,
+} from './contracts/user.contract';
 
 @Injectable()
 export class UserService {
@@ -10,30 +20,36 @@ export class UserService {
     private readonly cryptoService: CryptoService,
   ) {}
 
-  async findUserByEmail(email: string): Promise<User> {
+  async findBy(findBy: FindBy): Finded {
     return this.prismaService.user.findFirst({
-      where: { email },
+      where: findBy,
     });
   }
 
-  async checkUserExistsByEmail(email: string): Promise<boolean> {
-    const exists: number = await this.prismaService.user.count({
-      where: { email },
+  async exists(verifyBy: VerifyBy): Exists {
+    const count: number = await this.prismaService.user.count({
+      where: verifyBy,
     });
 
-    return exists === 1;
+    return count > 0;
   }
 
-  async validatePassword(user: User, password: string): Promise<boolean> {
-    return user && this.cryptoService.compare(password, user.password);
+  async validatePassword({ user, password }: ValidatePassword): ValidPassword {
+    return (
+      user &&
+      this.cryptoService.compare({
+        text: password,
+        hash: user.password,
+      })
+    );
   }
 
-  async create({ name, email, password }): Promise<User> {
+  async create({ name, email, password }: Create): Created {
     return await this.prismaService.user.create({
       data: {
         id: undefined,
         twoFactorSecret: undefined,
-        password: await this.cryptoService.hash(password),
+        password: await this.cryptoService.hash({ text: password }),
         name,
         email,
       },

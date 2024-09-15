@@ -1,6 +1,6 @@
 import { ConfigurationService } from '@/shared/services/configuration.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Logged, Login, Register } from '@/auth/contracts/auth.contract';
+import { Logged, Login, Register } from '@/auth/services/contracts/auth.contract';
 import { MessageContants } from '@/shared/constants/messages.contant';
 import { TokenatorService } from '@/shared/core/tokenator.service';
 import { TwoFactorService } from '@/auth/services/two-factor.service';
@@ -16,12 +16,12 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async login(login: Login): Promise<Logged> {
+  async login(login: Login): Logged {
     const { email, password, token } = login;
 
-    const user: User = await this.userService.findUserByEmail(email);
+    const user: User = await this.userService.findBy({ email });
 
-    if (this.userService.validatePassword(user, password)) {
+    if (this.userService.validatePassword({ user, password })) {
       throw new UnauthorizedException(MessageContants.INVALID_CREDENTIALS);
     }
 
@@ -36,7 +36,7 @@ export class AuthService {
       }
     }
 
-    return { token: await this.tokenatorService.create(user) } as Logged;
+    return { token: (await this.tokenatorService.create({ user })).jwtToken };
   }
 
   async register(register: Register): Promise<Logged> {
@@ -46,7 +46,7 @@ export class AuthService {
       throw new UnauthorizedException(MessageContants.REGISTER_NOT_ALLOWED);
     }
 
-    if (this.userService.checkUserExistsByEmail(email)) {
+    if (this.userService.exists(email)) {
       throw new UnauthorizedException(MessageContants.USER_ALREADY_EXISTS);
     }
 
